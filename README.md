@@ -2,7 +2,7 @@
 
 ## Local dev setup
 
-todo - change dunders to \_
+todo - change dunders to underscores
 
 If using user `dunder-mifflin`:
 
