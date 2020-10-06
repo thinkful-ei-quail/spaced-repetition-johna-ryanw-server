@@ -28,6 +28,15 @@ const LanguageService = {
       )
       .where({ language_id });
   },
+
+  // Todo Write service object methods to GET the following:
+
+  // 1. The next word (original) the user needs to submit their answer for.
+  // 2. The correct count for that word.
+  // 3. The incorrect count for that word.
+  // 4. The total score for the user so far.
+
+  // Todo Write service object methods for populating the linked list with words from the database
 };
 
 module.exports = LanguageService;
