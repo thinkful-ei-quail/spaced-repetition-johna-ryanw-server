@@ -31,6 +31,19 @@ const LanguageService = {
 
   // Todo Write service object methods to GET the following:
 
+  getNextWord(db, language_id) {
+    return db
+      .from('language')
+      .join('word', 'language.head', 'word.id')
+      .select(
+        'word.original as nextWord',
+        'word.correct_count as wordCorrectCount',
+        'word.incorrect_count as wordIncorrectCount',
+        'language.total_score as TotalScore'
+      )
+      .where('language.id', language_id);
+  },
+
   // 1. The next word (original) the user needs to submit their answer for.
   // 2. The correct count for that word.
   // 3. The incorrect count for that word.

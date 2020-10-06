@@ -47,13 +47,7 @@ languageRouter.get('/head', async (req, res, next) => {
       req.app.get('db'),
       req.user.id
     );
-    res.json({
-      language: data.name,
-      nextWord: data.original,
-      correctCount: data.correct_count,
-      incorrectCount: data.incorrect_count,
-      totalScore: data.total_score,
-    });
+    res.json(data);
     next();
   } catch (error) {
     next(error);
