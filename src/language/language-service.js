@@ -29,8 +29,6 @@ const LanguageService = {
       .where({ language_id });
   },
 
-  // Todo Write service object methods to GET the following:
-
   getNextWord(db, language_id) {
     return db
       .from('language')
@@ -41,15 +39,36 @@ const LanguageService = {
         'word.incorrect_count as wordIncorrectCount',
         'language.total_score as TotalScore'
       )
-      .where('language.id', language_id);
+      .where('language.id', language_id).first();
   },
 
-  // 1. The next word (original) the user needs to submit their answer for.
-  // 2. The correct count for that word.
-  // 3. The incorrect count for that word.
-  // 4. The total score for the user so far.
-
-  // Todo Write service object methods for populating the linked list with words from the database
+  async processGuess(db, language_id, guess) {
+    db = await db.transaction();
+    console.log(`guessed: ${guess}`);
+    const currentWordRow = await db('language').join('word as w0', 'language.head', 'w0.id')
+      .select('w0.id', 'w0.next', 'w0.memory_value', 'w0.translation')
+      .where('language.id', language_id).first();
+    const { translation } = currentWordRow;
+    console.log(currentWordRow);
+    const isCorrect = (translation === guess);
+    const fieldToIncrement = isCorrect ? 'correct_count' : 'incorrect_count';
+    const newMemValue = isCorrect ? currentWordRow.memory_value * 2 : 1;
+    let destQuery = db.from(`word as w${newMemValue}`);
+    for(let x = newMemValue; x-->1;)
+      destQuery = destQuery.join(`word as w${x}`, `w${x}.id`, `w${x+1}.next`);
+    const targetWordRow = await destQuery.select('w1.id', 'w1.next').where(`w${newMemValue}.id`, currentWordRow.next).first();
+    const newValues = {
+      memory_value: newMemValue,
+      next: targetWordRow.next,
+      [fieldToIncrement]: db.raw('?? + 1', [fieldToIncrement])
+    };
+    console.log(newValues);
+    await db('language').update('head', currentWordRow.next).where('language.id', language_id);
+    await db('word').update(newValues).where('id', currentWordRow.id);
+    await db('word').update('next', currentWordRow.id).where('id', targetWordRow.id);
+    db.commit();
+    return { isCorrect, translation };
+  }
 };
 
 module.exports = LanguageService;

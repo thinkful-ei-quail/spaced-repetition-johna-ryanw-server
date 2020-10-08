@@ -41,25 +41,28 @@ languageRouter.get('/', async (req, res, next) => {
 });
 
 languageRouter.get('/head', async (req, res, next) => {
-  // todo implement me
   try {
     const data = await LanguageService.getNextWord(
       req.app.get('db'),
-      req.user.id
+      req.language.id
     );
     res.json(data);
     next();
   } catch (error) {
     next(error);
   }
-
-  //res.send('implement me!');
 });
 
-languageRouter.post('/guess', async (req, res, next) => {
-  // todo implement me
-
-  res.send('implement me!');
+languageRouter.post('/guess', express.json(), async (req, res, next) => {
+  const { guess } = req.body;
+  if(typeof(guess) !== 'string')
+    return res.status(400).send();
+  try {
+    return res.json(await LanguageService.processGuess(req.app.get('db'), req.language.id, guess));
+  }
+  catch(err) {
+    next(err);
+  }
 });
 
 module.exports = languageRouter;
