@@ -1,31 +1,24 @@
 class _Node {
-  constructor(value, next = null) {
-    (this.value = value), (this.next = next);
+  constructor(data, next = null) {
+    (this.data = data), (this.next = next);
   }
 }
 
 class LinkedList {
-  constructor(head) {
-    this.head = head;
+  constructor() {
+    this.head = null;
   }
 
   insertFirst(item) {
     if (!item) {
-      return 'No value to insert.';
+      return 'No data to insert.';
     }
-    let newNode = new _Node(item);
-
-    if (!this.head) {
-      this.head = newNode;
-    } else {
-      newNode.next = this.head;
-      this.head = newNode;
-    }
+    this.head = new _Node(item, this.head);
   }
 
   insertLast(item) {
     if (!item) {
-      return 'No value to insert';
+      return 'No data to insert';
     }
     if (this.head === null) {
       this.insertFirst(item);
@@ -40,7 +33,7 @@ class LinkedList {
 
   insertAt(nthPos, itemToInsert) {
     if (!itemToInsert) {
-      return 'No value to insert.';
+      return 'No data to insert.';
     }
     if (nthPos < 0) {
       throw Error('Position error.');
@@ -71,13 +64,13 @@ class LinkedList {
     if (!this.head) {
       return null;
     }
-    if (this.head.value === item) {
+    if (this.head.data === item) {
       this.head = this.head.next;
       return;
     }
     let currNode = this.head;
     let prevNode = this.head;
-    while (currNode !== null && currNode.value !== item) {
+    while (currNode !== null && currNode.data !== item) {
       prevNode = currNode;
       currNode = currNode.next;
     }
@@ -92,7 +85,7 @@ class LinkedList {
       return null;
     }
     let currNode = this.head;
-    while (currNode.value !== item) {
+    while (currNode.data !== item) {
       if (currNode.next === null) {
         return null;
       } else {
