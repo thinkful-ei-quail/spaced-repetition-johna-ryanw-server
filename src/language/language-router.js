@@ -55,12 +55,16 @@ languageRouter.get('/head', async (req, res, next) => {
 
 languageRouter.post('/guess', express.json(), async (req, res, next) => {
   const { guess } = req.body;
-  if(typeof(guess) !== 'string')
-    return res.status(400).send();
+  if (typeof guess !== 'string') return res.status(400).send();
   try {
-    return res.json(await LanguageService.processGuess(req.app.get('db'), req.language.id, guess));
-  }
-  catch(err) {
+    const result = await LanguageService.processGuess(
+      req.app.get('db'),
+      req.language.id,
+      guess
+    );
+    console.log(result);
+    res.json(result);
+  } catch (err) {
     next(err);
   }
 });
