@@ -55,6 +55,13 @@ languageRouter.get('/head', async (req, res, next) => {
 
 languageRouter.post('/guess', express.json(), async (req, res, next) => {
   const { guess } = req.body;
+
+  if (!guess) {
+    return res.status(400).json({
+      error: 'Missing \'guess\' in request body',
+    });
+  }
+
   if (typeof guess !== 'string') return res.status(400).send();
   try {
     const result = await LanguageService.processGuess(

@@ -129,7 +129,7 @@ describe('Language Endpoints', function () {
       );
     });
 
-    it.skip('responds with 200 and user\'s languages', () => {
+    it('responds with 200 and user\'s languages', () => {
       return supertest(app)
         .get('/api/language/head')
         .set('Authorization', helpers.makeAuthHeader(testUser))
@@ -161,7 +161,7 @@ describe('Language Endpoints', function () {
       );
     });
 
-    it.skip('responds with 400 required error when \'guess\' is missing', () => {
+    it('responds with 400 required error when \'guess\' is missing', () => {
       const postBody = {
         randomField: 'test random field',
       };
@@ -180,7 +180,7 @@ describe('Language Endpoints', function () {
         guess: 'incorrect',
       };
 
-      it.skip('responds with incorrect and moves head', () => {
+      it('responds with incorrect and moves head', () => {
         return supertest(app)
           .post('/api/language/guess')
           .set('Authorization', helpers.makeAuthHeader(testUser))
@@ -196,7 +196,7 @@ describe('Language Endpoints', function () {
           });
       });
 
-      it.skip('moves the word 1 space and updates incorrect count', async () => {
+      it('moves the word 1 space and updates incorrect count', async () => {
         await supertest(app)
           .post('/api/language/guess')
           .set('Authorization', helpers.makeAuthHeader(testUser))
@@ -222,7 +222,7 @@ describe('Language Endpoints', function () {
         (word) => word.language_id === testLanguage.id
       );
 
-      it.skip('responds with correct and moves head', () => {
+      it('responds with correct and moves head', () => {
         const correctPostBody = {
           guess: testLanguagesWords[0].translation,
         };
@@ -241,7 +241,7 @@ describe('Language Endpoints', function () {
           });
       });
 
-      it.skip('moves the word 2 spaces, increases score and correct count', async () => {
+      it('moves the word 2 spaces, increases score and correct count', async () => {
         let correctPostBody = {
           guess: testLanguagesWords[0].translation,
         };
@@ -263,13 +263,6 @@ describe('Language Endpoints', function () {
             wordCorrectCount: 0,
             wordIncorrectCount: 0,
             answer: testLanguagesWords[1].translation,
-          .expect({
-            nextWord: testLanguagesWords[0].original,
-            totalScore: 3,
-            wordCorrectCount: 1,
-            wordIncorrectCount: 0,
-            answer: testLanguagesWords[2].translation,
-            isCorrect: true,
           });
       });
     });
