@@ -62,7 +62,7 @@ const LanguageService = {
     let linkedList = new LinkedList();
 
     let currentWord = words.find((word) => word.id === word.head);
-    console.log(words);
+
     linkedList.insertFirst(currentWord);
     let nextWord = words.find((word) => {
       return word.id === currentWord.next;

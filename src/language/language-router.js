@@ -66,7 +66,7 @@ languageRouter.post('/guess', jsonBodyParser, async (req, res, next) => {
 
   if (!guess) {
     return res.status(400).json({
-      error: 'Missing guess in request body.',
+      error: 'Missing \'guess\' in request body',
     });
   }
 
@@ -78,22 +78,23 @@ languageRouter.post('/guess', jsonBodyParser, async (req, res, next) => {
     const linkedList = await LanguageService.createLinkedList(words);
 
     let isCorrect;
-    let previousHead = linkedList.head.data;
-    let newNode = previousHead;
+    let newNode = linkedList.head.data;
 
+    // if guess is correct:
     if (newNode.translation === guess) {
       isCorrect = true;
       language.total_score++;
       newNode.correct_count++;
       let memoryValue = newNode.memory_value * 2;
       newNode.memory_value = Math.min(memoryValue, words.length);
-    } else {
+    } // if guess is incorrect
+    else {
       isCorrect = false;
       newNode.incorrect_count++;
       newNode.memory_value = 1;
     }
     // remove the current node
-    linkedList.remove(previousHead);
+    linkedList.remove(newNode);
 
     // insert back into list at the index of its memory value
     linkedList.insertAt(newNode.memory_value, newNode);
@@ -117,7 +118,7 @@ languageRouter.post('/guess', jsonBodyParser, async (req, res, next) => {
       totalScore: nextWord.total_score,
       wordCorrectCount: nextWord.correct_count,
       wordIncorrectCount: nextWord.incorrect_count,
-      translation: previousHead.translation,
+      translation: newNode.translation,
       isCorrect,
     };
 
